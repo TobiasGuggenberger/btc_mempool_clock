@@ -4,9 +4,12 @@
 #include <WebServer.h>
 #include <AutoConnect.h>
 #include <ArduinoJson.h>
-// Erweiterungen
+#include <time.h>
+// Erweiterungen laden
 #include <btc_mempool.h>
-
+#include <uhr.h>
+#include <btc_kurs.h>
+#include <btc_logo.h>
 
 
 WebServer Server;
@@ -18,9 +21,22 @@ AutoConnectConfig Config;       // Enable autoReconnect supported on v0.9.4
 /////////////////////////////////////////////////////////////////////////// Funktionsprototypen
 //void callback                (char*, byte*, unsigned int);
 void loop                      ();
-void btc_btc_mempool           ();
+void btc_mempool               ();
+void rootPage                  ();
+void Zeit_Datum                ();
+void Zeit_Uhrzeit              ();
+void btc_kurs                  ();
 
 
+/////////////////////////////////////////////////////////////////////////// Intervall der Steuerung
+unsigned long startSCHLEIFE_btckurs = 0;
+unsigned long intervSCHLEIFE_btckurs = 10000; 
+
+unsigned long startSCHLEIFE_zeit = 0;
+unsigned long intervSCHLEIFE_zeit = 2500; 
+
+unsigned long startSCHLEIFE_btcmempool = 0;
+unsigned long intervSCHLEIFE_btcmempool = 10000; 
 
 
 /////////////////////////////////////////////////////////////////////////// WiFi Root Page 
@@ -65,6 +81,8 @@ void setup() {
     Serial.println(WiFi.getHostname());
   }
 
+  // ////////////////////////////////////////////////////ntp Server init
+  configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
 
 }
 
@@ -73,11 +91,27 @@ void loop() {
   // Wifi Portal starten
   Portal.handleClient();
 
-  // OTA Handle starten
-  //ArduinoOTA.handle();  
+      ///////////////////////////////////////////////////////////////////////// BTC Kurs abfragen
+      if (millis() - startSCHLEIFE_btckurs > intervSCHLEIFE_btckurs) {
+          startSCHLEIFE_btckurs = millis();   // aktuelle Zeit abspeichern
+          // BTC Kurs abfragen
+          btc_kurs();
+        }
+
+      ///////////////////////////////////////////////////////////////////////// ZEIT abfragen
+      if (millis() - startSCHLEIFE_zeit > intervSCHLEIFE_zeit) {
+          startSCHLEIFE_zeit = millis();   // aktuelle Zeit abspeichern
+          // BTC Kurs abfragen
+          Zeit_Datum();
+        }
 
 
+      ///////////////////////////////////////////////////////////////////////// ZEIT abfragen
+      if (millis() - startSCHLEIFE_btcmempool > intervSCHLEIFE_btcmempool) {
+          startSCHLEIFE_btcmempool = millis();   // aktuelle Zeit abspeichern
+          // BTC Kurs abfragen
+          Zeit_Datum();
+        }
 
-delay(1000);
-btc_btc_mempool();
+
 }
