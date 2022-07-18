@@ -5,7 +5,7 @@ WiFiClient client;
 HTTPClient http;
 
 // Send request
-http.begin("https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC&tsyms=USD");
+http.begin("https://mempool.space/api/blocks/tip/height");
 int httpCode = http.GET();
 
   if (httpCode > 0) { //Check for the returning code
@@ -16,23 +16,17 @@ int httpCode = http.GET();
           DynamicJsonDocument doc(capacity);
 
           String json = payload;
-
-          //const char* json = "{\"XRP\":{\"ZAR\":4.20}}";
-
-          deserializeJson(doc, json);
-
-          String BTC_USD = doc["BTC"]["USD"]; 
-          
-          Serial.println("BTC Wert ausgeben");
-          Serial.println(BTC_USD);
-
+          String mempool_height = json;
+         
+          // Mem Wert ausgeben
+          Serial.print("MEMpool Block ");
+          Serial.println(mempool_height);
 
   }
   
   else {
     Serial.println("Error on HTTP request");
   }
-
 	
 http.end(); //Free the resources
 

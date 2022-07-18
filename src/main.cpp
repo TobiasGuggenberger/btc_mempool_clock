@@ -1,13 +1,11 @@
 #include <Arduino.h>
-#include <ArduinoOTA.h>
+//#include <ArduinoOTA.h>
 #include <WiFi.h>
 #include <WebServer.h>
 #include <AutoConnect.h>
 #include <ArduinoJson.h>
 // Erweiterungen
 #include <btc_mempool.h>
-
-
 
 
 
@@ -44,12 +42,12 @@ void rootPage() {
 /////////////////////////////////////////////////////////////////////////// Setup
 void setup() {
   Serial.begin(115200);
-  Serial.println();
+  Serial.println("Setup start");
 
  //OTA Setup für Firmware
-  ArduinoOTA.setHostname("24KanalRelaisWohnzimmer");
-  ArduinoOTA.setPassword("7n6WkRpZtxtkykyMUx329");
-  ArduinoOTA.begin();  
+ // ArduinoOTA.setHostname("24KanalRelaisWohnzimmer");
+//  ArduinoOTA.setPassword("7n6WkRpZtxtkykyMUx329");
+ // ArduinoOTA.begin();  
 
   // Enable saved past credential by autoReconnect option,
   // even once it is disconnected.
@@ -76,7 +74,7 @@ void loop() {
   Portal.handleClient();
 
   // OTA Handle starten
-  ArduinoOTA.handle();  
+  //ArduinoOTA.handle();  
 
 
 
