@@ -103,6 +103,7 @@ void loop() {
           startSCHLEIFE_zeit = millis();   // aktuelle Zeit abspeichern
           // BTC Kurs abfragen
           Zeit_Datum();
+          Zeit_Uhrzeit();
         }
 
 
@@ -110,7 +111,7 @@ void loop() {
       if (millis() - startSCHLEIFE_btcmempool > intervSCHLEIFE_btcmempool) {
           startSCHLEIFE_btcmempool = millis();   // aktuelle Zeit abspeichern
           // BTC Kurs abfragen
-          Zeit_Datum();
+          btc_mempool();
         }
 
 

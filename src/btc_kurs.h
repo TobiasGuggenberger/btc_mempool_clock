@@ -26,7 +26,7 @@ int httpCode = http.GET();
 
           String BTC_USD = doc["BTC"]["USD"]; 
           
-          Serial.println("BTC Wert ausgeben");
+          Serial.print ("BTC Wert ausgeben ");
           Serial.println(BTC_USD);
 
           // TFT Ausgabe generieren
