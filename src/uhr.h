@@ -15,7 +15,7 @@ void Zeit_Uhrzeit()
   
   Serial.println(&local, "%H:%M");
 
-          tft.setCursor(25,93);
+          tft.setCursor(text_tft_uhr_x,text_tft_uhr_y);
           tft.setTextColor(TFT_WHITE,TFT_BLACK);
           tft.setTextSize(1);
           tft.print(&local, "%H:%M");   
@@ -32,7 +32,7 @@ void Zeit_Datum()
   
   Serial.println(&local, "%d.%m.%y");
 
-          tft.setCursor(85,93);
+          tft.setCursor(text_tft_datum_x,text_tft_datum_y);
           tft.setTextColor(TFT_WHITE,TFT_BLACK);
           tft.setTextSize(1);
           tft.print(&local, "%d.%m.%y");    

@@ -30,17 +30,19 @@ int httpCode = http.GET();
 
           // TFT Ausgabe generieren
 
+          tft.fillRect(logo_tft_btc_block_x, logo_tft_btc_block_y, 48, 48, TFT_BLACK);
+
           if (BTC_old_kurs < BTC_USD) {
-          tft.drawBitmap(0, 20, bitcoinLogo, 48, 48, TFT_GREEN);
-          tft.setCursor(55,10);
+          tft.drawBitmap(logo_tft_btc_block_x, logo_tft_btc_block_y, bitcoinLogo, 48, 48, TFT_GREEN);
+          tft.setCursor(text_tft_btc_block_x, text_tft_btc_block_y);
           tft.setTextColor(TFT_GREEN,TFT_BLACK);
           tft.setTextSize(2);
           tft.print("$"+BTC_USD.substring(0, 5));
           }
           else
           {
-          tft.drawBitmap(0, 20, bitcoinLogo, 48, 48, TFT_RED);
-          tft.setCursor(55,10);
+          tft.drawBitmap(logo_tft_btc_block_x, logo_tft_btc_block_y, bitcoinLogo, 48, 48, TFT_RED);
+          tft.setCursor(text_tft_btc_block_x, text_tft_btc_block_y);
           tft.setTextColor(TFT_RED,TFT_BLACK);
           tft.setTextSize(2);
           tft.print("$"+BTC_USD.substring(0, 5));

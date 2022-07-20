@@ -5,6 +5,7 @@
 #include <AutoConnect.h>
 #include <ArduinoJson.h>
 #include <time.h>
+#include <config.h>
 
 // TFT Display
 #include <TFT_eSPI.h> 
@@ -14,6 +15,7 @@ TFT_eSPI tft = TFT_eSPI();  // Invoke library, pins defined in User_Setup.h
 
 // Logo laden
 #include <btc_logo.h>
+#include <block_logo.h>
 // Erweiterungen laden
 #include <btc_mempool.h>
 #include <uhr.h>
@@ -42,13 +44,21 @@ void display_del_nach_setup    ();
 
 /////////////////////////////////////////////////////////////////////////// Intervall der Steuerung
 unsigned long startSCHLEIFE_btckurs = 0;
-unsigned long intervSCHLEIFE_btckurs = 10000; 
+unsigned long intervSCHLEIFE_btckurs = 5000; 
 
 unsigned long startSCHLEIFE_zeit = 0;
 unsigned long intervSCHLEIFE_zeit = 2000; 
 
 unsigned long startSCHLEIFE_btcmempool = 0;
 unsigned long intervSCHLEIFE_btcmempool = 10000; 
+
+// wechseln zwischen BTC Kurs und Blockzeit 
+unsigned long wechsler_millis_zaehler = 0;        // will store last time LED was updated
+const long wechsler_interval = 10000;           // interval at which to blink (milliseconds)
+
+
+
+int wechsler = 0;
 
 
 /////////////////////////////////////////////////////////////////////////// WiFi Root Page 
@@ -152,31 +162,53 @@ void loop() {
 // Display löschen
 display_del_nach_setup();
 
+ // /////////////////////////////////////////////////////////////////////////// wechsler
+  unsigned long wechsler_start_millis = millis();
+  if (wechsler_start_millis - wechsler_millis_zaehler >= wechsler_interval) {
+
+    wechsler_millis_zaehler = wechsler_start_millis;
+
+
+    if (wechsler == 0) {
+      wechsler = 1;
+      Serial.println("BTC");
+      btc_kurs();
+    } else {
+      wechsler = 0;
+      Serial.println("Block");
+      btc_mempool();
+    }
+  }
+
+/*
 ///////////////////////////////////////////////////////////////////////// BTC Kurs abfragen
 
   if (millis() - startSCHLEIFE_btckurs > intervSCHLEIFE_btckurs) {
       startSCHLEIFE_btckurs = millis();   // aktuelle Zeit abspeichern
       // BTC Kurs abfragen
       btc_kurs();
-   }
+
+      Serial.println("BTC");
+
+   } 
+*/
 
 
-
-      ///////////////////////////////////////////////////////////////////////// ZEIT abfragen
+///////////////////////////////////////////////////////////////////////// ZEIT abfragen
       if (millis() - startSCHLEIFE_zeit > intervSCHLEIFE_zeit) {
           startSCHLEIFE_zeit = millis();   // aktuelle Zeit abspeichern
           // BTC Kurs abfragen
           Zeit_Datum();
           Zeit_Uhrzeit();
-        }
+ }
 
-
+/*
       ///////////////////////////////////////////////////////////////////////// ZEIT abfragen
       if (millis() - startSCHLEIFE_btcmempool > intervSCHLEIFE_btcmempool) {
           startSCHLEIFE_btcmempool = millis();   // aktuelle Zeit abspeichern
           // MEMpool abfragen
           btc_mempool();
         }
-
+*/
 
 }
