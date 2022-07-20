@@ -5,11 +5,20 @@
 #include <AutoConnect.h>
 #include <ArduinoJson.h>
 #include <time.h>
+
+// TFT Display
+#include <TFT_eSPI.h> 
+
+/////////////////////////////////////////////////////////////////////////// TFT Setup
+TFT_eSPI tft = TFT_eSPI();  // Invoke library, pins defined in User_Setup.h
+
+// Logo laden
+#include <btc_logo.h>
 // Erweiterungen laden
 #include <btc_mempool.h>
 #include <uhr.h>
 #include <btc_kurs.h>
-#include <btc_logo.h>
+
 
 
 WebServer Server;
@@ -17,6 +26,8 @@ WebServer Server;
 AutoConnect       Portal(Server);
 AutoConnectConfig Config;       // Enable autoReconnect supported on v0.9.4
 
+
+int restart_nach_ap = 0;
 
 /////////////////////////////////////////////////////////////////////////// Funktionsprototypen
 //void callback                (char*, byte*, unsigned int);
@@ -26,6 +37,7 @@ void rootPage                  ();
 void Zeit_Datum                ();
 void Zeit_Uhrzeit              ();
 void btc_kurs                  ();
+void display_del_nach_setup    ();
 
 
 /////////////////////////////////////////////////////////////////////////// Intervall der Steuerung
@@ -33,7 +45,7 @@ unsigned long startSCHLEIFE_btckurs = 0;
 unsigned long intervSCHLEIFE_btckurs = 10000; 
 
 unsigned long startSCHLEIFE_zeit = 0;
-unsigned long intervSCHLEIFE_zeit = 2500; 
+unsigned long intervSCHLEIFE_zeit = 2000; 
 
 unsigned long startSCHLEIFE_btcmempool = 0;
 unsigned long intervSCHLEIFE_btcmempool = 10000; 
@@ -53,7 +65,27 @@ void rootPage() {
     "</body>"
     "</html>";
   Server.send(200, "text/html", content);
+
 }
+
+
+
+/////////////////////////////////////////////////////////////////////////// display_del_nach_setup
+void display_del_nach_setup(){
+
+// Display nach dem Setup löschen
+
+if (restart_nach_ap == 1) {
+  Serial.println("Display löschen");
+  tft.fillScreen(TFT_BLACK);
+  tft.setTextColor(TFT_WHITE,TFT_BLACK);
+  tft.setTextSize(1);
+  
+  restart_nach_ap = 2;
+} 
+
+}
+
 
 /////////////////////////////////////////////////////////////////////////// Setup
 void setup() {
@@ -64,6 +96,28 @@ void setup() {
  // ArduinoOTA.setHostname("24KanalRelaisWohnzimmer");
 //  ArduinoOTA.setPassword("7n6WkRpZtxtkykyMUx329");
  // ArduinoOTA.begin();  
+
+  tft.init();
+  tft.setRotation(1);
+  tft.fillScreen(TFT_BLACK);
+  tft.setTextColor(TFT_WHITE,TFT_BLACK);
+  tft.setTextSize(1);
+  // text 1
+
+  tft.setCursor(5, 2, 2);
+  tft.println("Verbinden Sie sich bitte ");
+  tft.setCursor(5, 22, 2);
+  tft.println("mit Accesspoint esp32ap");
+    delay(500);
+  tft.setCursor(5, 42, 2);
+  tft.println("Passwort 12345678");  
+   delay(500);
+  tft.setCursor(5, 62, 2);
+  tft.println("Loggen Sie sich in Ihr");  
+  tft.setCursor(5, 82, 2);
+  tft.println("Wlan ein über das Portal.");   
+     delay(500); 
+
 
   // Enable saved past credential by autoReconnect option,
   // even once it is disconnected.
@@ -79,24 +133,34 @@ void setup() {
   if (Portal.begin()) {
     Serial.println("WiFi connected: " + WiFi.localIP().toString());
     Serial.println(WiFi.getHostname());
+    restart_nach_ap = 1;
   }
 
-  // ////////////////////////////////////////////////////ntp Server init
+
+  ////////////////////////////////////////////////////// ntp Server init
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+ 
 
 }
+
 
 /////////////////////////////////////////////////////////////////////////// Loop
 void loop() {
   // Wifi Portal starten
   Portal.handleClient();
 
-      ///////////////////////////////////////////////////////////////////////// BTC Kurs abfragen
-      if (millis() - startSCHLEIFE_btckurs > intervSCHLEIFE_btckurs) {
-          startSCHLEIFE_btckurs = millis();   // aktuelle Zeit abspeichern
-          // BTC Kurs abfragen
-          btc_kurs();
-        }
+// Display löschen
+display_del_nach_setup();
+
+///////////////////////////////////////////////////////////////////////// BTC Kurs abfragen
+
+  if (millis() - startSCHLEIFE_btckurs > intervSCHLEIFE_btckurs) {
+      startSCHLEIFE_btckurs = millis();   // aktuelle Zeit abspeichern
+      // BTC Kurs abfragen
+      btc_kurs();
+   }
+
+
 
       ///////////////////////////////////////////////////////////////////////// ZEIT abfragen
       if (millis() - startSCHLEIFE_zeit > intervSCHLEIFE_zeit) {
@@ -110,7 +174,7 @@ void loop() {
       ///////////////////////////////////////////////////////////////////////// ZEIT abfragen
       if (millis() - startSCHLEIFE_btcmempool > intervSCHLEIFE_btcmempool) {
           startSCHLEIFE_btcmempool = millis();   // aktuelle Zeit abspeichern
-          // BTC Kurs abfragen
+          // MEMpool abfragen
           btc_mempool();
         }
 

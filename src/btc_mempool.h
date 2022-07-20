@@ -22,6 +22,12 @@ int httpCode = http.GET();
           Serial.print("MEMpool Block ");
           Serial.println(mempool_height);
 
+          // TFT Ausgabe
+          tft.setCursor(55,48);
+          tft.setTextColor(TFT_ORANGE,TFT_BLACK);
+          tft.setTextSize(2);
+          tft.print(mempool_height);          
+
   }
   
   else {

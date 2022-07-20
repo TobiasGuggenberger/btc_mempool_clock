@@ -1,5 +1,4 @@
-// Setup fuer https
-String BTC_old_kurs ="0"; 
+String BTC_old_kurs ="0";
 
 /////////////////////////////////////////////////////////////////////////// BTC Kurs 
 void btc_kurs(){
@@ -30,29 +29,24 @@ int httpCode = http.GET();
           Serial.println(BTC_USD);
 
           // TFT Ausgabe generieren
-/*
-          if (BTC_old_kurs < BTC_USD) {
 
-          tft.drawBitmap(0, 0, bitcoinLogo, 128, 64, GREEN);
-          tft.setCursor(24,78);
-          tft.setTextColor(GREEN,BLACK);
+          if (BTC_old_kurs < BTC_USD) {
+          tft.drawBitmap(0, 20, bitcoinLogo, 48, 48, TFT_GREEN);
+          tft.setCursor(55,10);
+          tft.setTextColor(TFT_GREEN,TFT_BLACK);
           tft.setTextSize(2);
           tft.print("$"+BTC_USD.substring(0, 5));
-
           }
           else
           {
-          tft.drawBitmap(0, 0, bitcoinLogo, 128, 64, RED);
-          tft.setCursor(24,78);
-          tft.setTextColor(RED,BLACK);
+          tft.drawBitmap(0, 20, bitcoinLogo, 48, 48, TFT_RED);
+          tft.setCursor(55,10);
+          tft.setTextColor(TFT_RED,TFT_BLACK);
           tft.setTextSize(2);
           tft.print("$"+BTC_USD.substring(0, 5));
           }
-
           BTC_old_kurs = BTC_USD;
 
-          }
-*/
 
   }
   

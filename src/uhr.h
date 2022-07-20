@@ -8,6 +8,22 @@ const int   daylightOffset_sec = 3600;
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
   */
 
+void Zeit_Uhrzeit()
+{
+  tm local;
+  getLocalTime(&local);
+  
+  Serial.println(&local, "%H:%M");
+
+          tft.setCursor(20,93);
+          tft.setTextColor(TFT_WHITE,TFT_BLACK);
+          tft.setTextSize(1);
+          tft.print(&local, "%H:%M");   
+
+}
+
+
+
 /////////////////////////////////////////////////////////////////////////// ZEIT
 void Zeit_Datum()
 {
@@ -15,12 +31,11 @@ void Zeit_Datum()
   getLocalTime(&local);
   
   Serial.println(&local, "%d.%m.%y");
+
+          tft.setCursor(85,93);
+          tft.setTextColor(TFT_WHITE,TFT_BLACK);
+          tft.setTextSize(1);
+          tft.print(&local, "%d.%m.%y");    
+
 }
 
-void Zeit_Uhrzeit()
-{
-  tm local;
-  getLocalTime(&local);
-  
-  Serial.println(&local, "%H:%M");
-}
