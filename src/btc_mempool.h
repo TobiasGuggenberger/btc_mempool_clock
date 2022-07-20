@@ -28,7 +28,7 @@ int httpCode = http.GET();
           tft.setTextSize(1);
           tft.print("Block");  
 
-          tft.setCursor(97,55);
+          tft.setCursor(103,55);
           tft.setTextColor(TFT_ORANGE,TFT_BLACK);
           tft.setTextSize(1);
           tft.print(mempool_height);          
