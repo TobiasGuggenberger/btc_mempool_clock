@@ -15,7 +15,7 @@ void Zeit_Uhrzeit()
   
   Serial.println(&local, "%H:%M");
 
-          tft.setCursor(20,93);
+          tft.setCursor(25,93);
           tft.setTextColor(TFT_WHITE,TFT_BLACK);
           tft.setTextSize(1);
           tft.print(&local, "%H:%M");   
